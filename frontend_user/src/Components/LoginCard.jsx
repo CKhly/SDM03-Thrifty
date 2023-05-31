@@ -132,12 +132,12 @@ function LoginCard() {
               </FormControl>
               <PasswordField value={password} onChange={handlePasswordChange} ref={passwordRef}/>
             </Stack>
-            <HStack justify="space-between">
+            {/* <HStack justify="space-between">
               <Checkbox defaultChecked>{t('loginCard.rememberMe')}</Checkbox>
-              {/* <Button variant="link" colorScheme="blue" size="sm">
+              <Button variant="link" colorScheme="blue" size="sm">
                 {t('loginCard.forgotPassword')}
-              </Button> */}
-            </HStack>
+              </Button>
+            </HStack> */}
             <Stack spacing="6" justifyContent={'center'}>
               <Button 
               variant="primary"
