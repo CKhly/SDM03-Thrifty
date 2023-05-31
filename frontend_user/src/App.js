@@ -26,15 +26,15 @@ function App() {
   // const [currentUserInfo, setCurrentUserInfo] = useState(null);
   const { i18n } = useTranslation();
   const [onHomePage, setOnHomePage] = useState(false);
-  const time_interval = 2500;
+  const time_interval = 1500;
 
   // useEffect(()=>{
   //   setLanguageValue(i18n.language);
   // }, [i18n.language])
 
-  useEffect(()=>{
-    console.log('storesData', storesData)
-  }, [storesData])
+  // useEffect(()=>{
+  //   console.log('storesData', storesData)
+  // }, [storesData])
 
   useEffect(()=>{
     // console.log('options', filterOptions.item)
