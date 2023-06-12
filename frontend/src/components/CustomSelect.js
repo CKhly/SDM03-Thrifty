@@ -27,8 +27,10 @@ import {
     //Select
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons'
+import { useTranslation } from 'react-i18next';
 
-export default ({tag, setTag, submit}) => {
+export default ({tag, setTag }) => {
+    const { t } = useTranslation();
     const {stocks} = useStoreAdmin();
     const [focus, setFocus] = useState(false);
     const cardRef = useRef(null);
@@ -62,9 +64,7 @@ export default ({tag, setTag, submit}) => {
     return (
         <Box>
             <InputGroup>
-                <Input onClick={() => {setFocus(true)}} value={tag} onChange={e => handleInput(e)} placeholder='輸入新類別或選擇已使用類別' 
-                isInvalid = {submit && tag == ""}
-                errorBorderColor='crimson'/>
+                <Input onClick={() => {setFocus(true)}} value={tag} onChange={e => handleInput(e)}  errorBorderColor='crimson'/>
                 <InputRightElement children={<ChevronDownIcon color='grey' />} />
                 </InputGroup>
             { focus && stocks?.length > 0?
@@ -76,8 +76,8 @@ export default ({tag, setTag, submit}) => {
                 >
                     {stocks.map(s => {
                         return (
-                            <Box key = {s.tag} as="span" flex='1' textAlign='left' display= 'flex' alignItems='center' h = {10} pl = {3} bg={s.tag === tag ? '#EDF2F6': 'white'} onClick={() => handleSelect(s.tag)} cursor='pointer'>
-                                {s.tag}
+                            <Box key = {s.category} as="span" flex='1' textAlign='left' display= 'flex' alignItems='center' h = {10} pl = {3} bg={s.category === tag ? '#EDF2F6': 'white'} onClick={() => handleSelect(s.category)} cursor='pointer'>
+                                {s.category}
                             </Box>
                         )
                     })}

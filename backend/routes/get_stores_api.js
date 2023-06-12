@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-// 引入 FoodINfo 和 StoreInfo model
+// 引入 FoodInfo 和 StoreInfo model
 const FoodInfo = require('../model/food_info');
 const StoreInfo = require('../model/store_info');
 
@@ -17,7 +17,7 @@ router.get('/', checkUserLocation, async function (req, res) {
               $near: {
                   $geometry: { type: "Point",  coordinates: [ longitude, latitude ] },
                   $minDistance: 0, // meters
-                  $maxDistance: 1000 // meters
+                  $maxDistance: 750 // meters
               }
           },
           stocks: { $ne: [] }
@@ -32,7 +32,11 @@ router.get('/', checkUserLocation, async function (req, res) {
           } else {
             stock.name = food_exist.name
             stock.category = food_exist.category
+            stock.tag = food_exist.tag
+            stock.original_price = food_exist.original_price
             stock.discount_price = food_exist.discount_price
+            stock.discount_rate = food_exist.discount_rate
+            stock.img_url = food_exist.img_url
           }
         }
       }

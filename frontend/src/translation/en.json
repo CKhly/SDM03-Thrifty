@@ -1,0 +1,78 @@
+{
+  "login": {
+    "login": "Sign In",
+    "account": "Account",
+    "password": "Password",
+    "new": "New account",
+    "error": "Email address is not registered or incorrect password."
+  },
+  "signup": {
+    "signup": "Sign Up",
+    "join": "Join Thrifty",
+    "name": "Store name",
+    "account": "Email",
+    "password": "Password",
+    "category": "Store Type",
+    "phone": "Phone number",
+    "address": "Address",
+    "login": "Login",
+    "lat": "Latitude",
+    "lon": "Longitude",
+    "reminder": "Already in Thrifty?",
+    "inputBlank": "Field cannot be blank.",
+    "fieldBlank": "Complete this field.",
+    "nameErr": "Please enter a valid name, only accept number or Chinese/English.",
+    "emailErr": "Please enter a valid email address",
+    "phoneErr": "Please enter a valid phone number",
+    "addressErr": "Please enter a valid address",
+    "latErr": "Please enter a valid latitude",
+    "lonErr": "Please enter a valid longitude",
+    "error": "The email address has been registereds."
+  },
+  "profile": {
+    "save": "Save", 
+    "success": "Profile has been updated successfully",
+    "fail": "Fail to update profile"
+  },
+  "nav": {
+    "profile": "Profile",
+    "productManagement": "Product Management",
+    "setting": "Setting",
+    "signout": "Sign out"
+  },
+  "addItem": "New product",
+  "management": {
+    "type": "Type",
+    "noItem": "No Product Information"
+  },
+  "setting": {
+    "language": "Language"
+  },
+  "fooddrawer": {
+    "edititem": "Edit Product",
+    "name": "Product name",
+    "tag": "Self-defined type",
+    "description": "Product description",
+    "inventory": "Inventory",
+    "originalP": "Original price",
+    "discountedP": "Discounted price",
+    "img": "Prduct image",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "update": "Update",
+    "tagdes": "Input new type or select used type",
+    "priceErr": "Please enter a valid price",
+    "priceErr2": "discounted price must be lower than orignal one",
+    "existErr": "The product name already exists"
+  },
+  "toast": {
+    "addItem": "{{name}} has been added successfully",
+    "editItem": "{{name}} has been updated successfully", 
+    "addfail": "Fail to add item",
+    "modifyfail": "Fail to update item",
+    "delete": "{{name}} has been deleted successfully"
+  },
+  "deleteconfirm": "Are you sure to delete",
+  "yes": "Yes",
+  "no": "No"
+}

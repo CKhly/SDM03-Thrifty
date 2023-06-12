@@ -9,11 +9,6 @@ import {
     Flex,
     HStack,
     VStack,
-    Icon,
-    useColorModeValue,
-    Link,
-    Drawer,
-    DrawerContent,
     Text,
     useDisclosure,
     BoxProps,
@@ -37,25 +32,28 @@ import { FiEdit, FiPlus } from "react-icons/fi";
 import instance from "../api.js";
 import {useStoreAdmin} from "../hooks/useStoreAdmin";
 import TypeCard from '../components/TypeCard';
+import { useTranslation } from 'react-i18next';
 
 
 export default () => {
     const [items, setItems] = useState([]);
     const {stocks, selectedType, setStock, setSelectedType} = useStoreAdmin();
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const { t } = useTranslation();
 
 
     //const scrollRefs = useMemo(() => Array.from({ length: stocks.length }, () => createRef()), [stocks]);
     const scrollRefs =useMemo(() => {
         return stocks?.reduce((acc, obj) => {
-          const index = obj.tag;
+          const index = obj.category;
           acc[index] = createRef();
           return acc;
         }, {});
       }, [stocks]);
-    const ScrollToTop = (tag) => {
-        setSelectedType(tag);
-        scrollRefs[tag].current?.scrollIntoView({
+      
+    const ScrollToTop = (cat) => {
+        setSelectedType(cat);
+        scrollRefs[cat].current?.scrollIntoView({
             behavior: 'smooth',
             block: 'start',
             inline: 'start'
@@ -66,21 +64,21 @@ export default () => {
         <>
         {stocks?.length === 0 ?
             <Box display='flex' justifyContent='center' alignItems='center' h='100%'>
-                <Text fontSize='5xl' color='lightgrey'>尚無品項資訊</Text>
+                <Text fontSize='5xl' color='lightgrey'>{t("management.noItem")}</Text>
             </Box> : 
             <Stack divider={<StackDivider h = '100%'/>} direction = 'row' h = '100%' overflow='hidden'  >
                 <Box w= '25%' h = '100%'>
                     <Box mb = {10} ml = {5} mt = {3} display = 'flex'>
-                        <Text  fontSize= '26px' textAlign = 'left' >商品類別</Text>
+                        <Text  fontSize= '26px' textAlign = 'left' >{t("management.type")}</Text>
                     </Box>
                     <Accordion overflow='scroll'>
                         {stocks?.map((s, i) => {
                             return (
-                                <AccordionItem key = {s.tag}>
+                                <AccordionItem key = {s.category}>
                                     <h2>
-                                    <AccordionButton bg={selectedType === s.tag ? "#EDF2F6": 'white'}>
-                                    <Box as="span" flex='1' textAlign='left' display= 'flex' alignItems='center' h = {10} pl = {3} key={s.tag} onClick = {() => ScrollToTop(s.tag)}>
-                                        {s.tag}
+                                    <AccordionButton bg={selectedType === s.category ? "#EDF2F6": 'white'}>
+                                    <Box as="span" flex='1' textAlign='left' display= 'flex' alignItems='center' h = {10} pl = {3} key={s.category} onClick = {() => ScrollToTop(s.category)}>
+                                        {s.category}
                                     </Box>
                                     </AccordionButton>
                                     </h2>
@@ -98,14 +96,12 @@ export default () => {
                     >
                         {stocks?.map((t) => {
                             return (
-                                <TypeCard typeStocks = {t} r = {scrollRefs[t.tag]} key={t.tag}/>
+                                <TypeCard typeStocks = {t} r = {scrollRefs[t.category]} key={t.category}/>
                             )
                         })}
                     </VStack>
                 </Box>
             </Stack> }
-    </>
-    
-        
+    </> 
     )
 }

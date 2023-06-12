@@ -7,18 +7,13 @@ import {
     Text,
     useColorModeValue,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+const DefaultImg = require('../images/foodImgDefault.png')
 // import Rating from './Rating';
 
-// const data = {
-//     itemName: "夏威夷披薩",
-//     description: "新鮮現做，番茄、九層塔、馬札瑞拉起士",
-//     sellingPrice: 100,
-//     originalPrice: 250,
-//     image: "https://tokyo-kitchen.icook.network/uploads/recipe/cover/380644/d3dae1cadb3764f0.jpg",
-//     number: 3,
-// };
-const image = "https://www.7-11.com.tw/freshfoods/1_Ricerolls/images/ricerolls_266.png";
+
+// const imageURL = "https://img.craiyon.com/2023-05-09/768ea19460d4429d8ffdafae96f47783.webp"
+// "https://www.7-11.com.tw/freshfoods/1_Ricerolls/images/ricerolls_266.png";
 
   
 export default function ItemCard(foodData) {
@@ -30,17 +25,24 @@ export default function ItemCard(foodData) {
                 borderWidth="1px"
                 borderRadius="lg"
                 // w={{ sm: '100%', md: '45%vw' }}
-                height={{ sm: '476px', md: '15rem' }}
+                minH={{ sm: '476px', md: '15rem' }}
                 direction={{ base: 'column', md: 'row' }}
                 bg={useColorModeValue('white', 'gray.900')}
                 boxShadow={'md'}
                 padding={4}>
                 <Flex flex={1} bg="blue.200">
-                    <Image
-                    objectFit="cover"
-                    boxSize="100%"
-                    src={ image }
-                    />
+                    {foodInfo.food.img_url?
+                        <Image
+                            objectFit="cover"
+                            boxSize="100%"
+                            src={ foodInfo.food.img_url }
+                            onError = {(e) => {e.target.src = DefaultImg}}
+                        />:
+                        <Image
+                            objectFit="cover"
+                            boxSize="100%"
+                            src={ DefaultImg }/>
+                    }
                 </Flex>
                 <Stack
                     flex={1}
@@ -50,12 +52,20 @@ export default function ItemCard(foodData) {
                     p={1} pl={2} pt={2} 
                     spacing="12px">
                     <Heading fontSize={'xl'} fontFamily={'body'}> {foodInfo.food.name} </Heading>
-                    {/* <Text  size="sm" mb={4} color={"gray.500"}> {data.description} </Text> */}
+                    {foodInfo.food.description?
+                        <Text  size="sm" mb={4} color="gray"> {foodInfo.food.description} </Text>
+                        :<></>
+                    }
                     <Box w="100%">
-                        <Heading fontSize={'xl'} fontFamily={'body'} color="red.400"> ＄{foodInfo.food.discount_price} </Heading>
-                        <Text  size="lg"  textDecoration="line-through" color={"red.200"}> ＄{foodInfo.food.original_price} </Text>
+                        {foodInfo.food.discount_price?
+                            <>
+                            <Heading fontSize={'xl'} fontFamily={'body'} color="red.400"> ＄{foodInfo.food.discount_price} </Heading>
+                            <Text size="lg"  textDecoration="line-through" color={"red.200"}> ＄{foodInfo.food.original_price} </Text>
+                            </>:
+                            <Heading fontSize={'xl'} fontFamily={'body'} color="red.400">特價：{foodInfo.food.discount_rate} </Heading>
+                        }
                     </Box>
-                    <Text  size="sm" mb={4}> 庫存：{foodInfo.quantity} </Text>
+                    <Text  size="sm" mb={4} bottom={0}position="relative"> 庫存：{foodInfo.quantity} </Text>
                 </Stack>
             </Stack>
         </Box>

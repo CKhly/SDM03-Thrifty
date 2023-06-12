@@ -19,6 +19,7 @@ import {
 import { useState } from 'react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 
@@ -31,20 +32,22 @@ function SignupCard() {
 
   const [email, setEmail] = useState('');
   const handleEmailChange = (event) => setEmail(event.target.value)
-  const isEmailError = email === ''
+  const isEmailError = (email === '' || !(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)));
 
   const [password, setPassword] = useState('');
   const handlePasswordChange = (event) => setPassword(event.target.value)
   const isPasswordError = (password.length < 8 || password.length > 20 || password === password.toLowerCase() || password === password.toUpperCase() || !(/\d/.test(password)))
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = (event) => {
     if (!(isAccountNameError || isEmailError || isPasswordError)) {
       const userData = { 'name': accountName, 'email': email, 'password': password }
-      axios.post('http://52.193.252.15/api/1.0/user', userData, { crossdomain: true })
+      axios.post('https://thrifty-tw.shop/api/1.0/user', userData, { crossdomain: true })
           .then(response => {
-              console.log(jwt_decode(response.data.message)); })
+              // console.log(jwt_decode(response.data.message)); 
+            })
       window.alert('Sign up successfully! Please log in.');
       navigate('/login');
     }
@@ -59,10 +62,10 @@ function SignupCard() {
       <Stack spacing={8} mx={'auto'} maxW={'xl'} py={12} px={6}>
         <Stack align={'center'}>
           <Heading fontSize={'4xl'} textAlign={'center'}>
-            Sign up
+            {t('signupCard.title')}
           </Heading>
           <Text fontSize={'lg'} color={'gray.600'}>
-            to enjoy all of our cool features ✌️
+            {t('signupCard.subtitle')}
           </Text>
         </Stack>
         <Box
@@ -74,19 +77,19 @@ function SignupCard() {
             <HStack>
               <Box>
                 <FormControl id="accountName" isRequired isInvalid={isAccountNameError}>
-                  <FormLabel>Account Name</FormLabel>
+                  <FormLabel>{t('signupCard.accountName')}</FormLabel>
                   <Input type="text" value={accountName} onChange={handleAccountNameChange}/>
                 </FormControl>
               </Box>
               <Box>
                 <FormControl id="email" isRequired isInvalid={isEmailError}>
-                  <FormLabel>Email address</FormLabel>
+                  <FormLabel>{t('signupCard.emailAddress')}</FormLabel>
                   <Input type="email" value={email} onChange={handleEmailChange}/>
                 </FormControl>
               </Box>
             </HStack>
             <FormControl id="password" isRequired isInvalid={isPasswordError}>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t('signupCard.password')}</FormLabel>
               <InputGroup>
                 <Input type={showPassword ? 'text' : 'password'} value={password} onChange={handlePasswordChange} placeholder="Password should contain 8 to 20 characters."/>
                 <InputRightElement h={'full'}>
@@ -101,10 +104,10 @@ function SignupCard() {
               </InputGroup>
               {!isPasswordError ? (
                 <FormHelperText>
-                  Valid password.
+                  {t('signupCard.passwordValid')}
                 </FormHelperText>
               ) : (
-                <FormErrorMessage>Password should contain 8 to 20 characters, with at least one numeric digit, one uppercase and one lowercase letter.</FormErrorMessage>
+                <FormErrorMessage width={'400px'}>{t('signupCard.passwordError')}</FormErrorMessage>
               )}
             </FormControl>
             <Stack spacing={10} pt={2}>
@@ -117,12 +120,12 @@ function SignupCard() {
                   bg: 'blue.500',
                 }}
                 onClick={handleSubmit}>
-                Sign up
+                {t('signupCard.signupButton')}
               </Button>
             </Stack>
             <Stack pt={6}>
               <Text align={'center'}>
-                Already a user? <Link color={'blue.400'} href={'/login'}>Login</Link>
+                {t('signupCard.alreadyaUser')} <Link color={'blue.400'} href={'/login'}>{t('signupCard.loginLink')}</Link>
               </Text>
             </Stack>
           </Stack>

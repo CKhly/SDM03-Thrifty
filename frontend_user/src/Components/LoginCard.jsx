@@ -14,15 +14,15 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { Logo } from './Logo.jsx'
-import { OAuthButtonGroup } from './OAuthButtonGroup.jsx'
 import { PasswordField } from './PasswordField.jsx'
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import jwt_decode from "jwt-decode";
 import GoogleSSO from './GoogleSSO.js';
 
-function LoginCard({currentUserInfo, setCurrentUserInfo}) {
+function LoginCard() {
 
   const passwordRef = useRef(null);
   // console.log(currentUserInfo); // { current: null }
@@ -45,18 +45,29 @@ function LoginCard({currentUserInfo, setCurrentUserInfo}) {
   const handleSubmit = async e => {
     e.preventDefault();
     if (true) { // Error handling
-      axios.get(`http://52.193.252.15/api/1.0/user?email=${email}&password=${password}`, { crossdomain: true })
+      axios.get(`https://thrifty-tw.shop/api/1.0/user?email=${email}&password=${password}`, { crossdomain: true })
           .then(response => {
-              console.log(jwt_decode(response.data.message));
-              setCurrentUserInfo(jwt_decode(response.data.message));
-              localStorage.setItem('user', jwt_decode(response.data.message).name);
+              // console.log(jwt_decode(response.data.message));
+              // setCurrentUserInfo(jwt_decode(response.data.message));
+              localStorage.setItem('_id', jwt_decode(response.data.message)._id);
+              localStorage.setItem('name', jwt_decode(response.data.message).name);
+              localStorage.setItem('email', jwt_decode(response.data.message).email);
+              localStorage.setItem('favorite_stores', jwt_decode(response.data.message).favorite_stores);
+              localStorage.setItem('iat', jwt_decode(response.data.message).iat);
               window.alert('Login successfully!');
               navigate('/');
+              // console.log(localStorage.getItem('favorite_stores'));
            })
           .catch(error => { window.alert('Login failed!');
           console.log(error);});
     }
   }
+
+  // const handleGoogleLogin = (user) => {
+  //   setCurrentUserInfo(user);
+  // }
+
+  const { t } = useTranslation();
 
   return (
     <Container
@@ -72,7 +83,7 @@ function LoginCard({currentUserInfo, setCurrentUserInfo}) {
     >
       <Stack spacing="8">
         <Stack spacing="6">
-          <Logo />
+          {/* <Logo /> */}
           <Stack
             spacing={{
               base: '2',
@@ -83,11 +94,11 @@ function LoginCard({currentUserInfo, setCurrentUserInfo}) {
             <Heading
               fontSize={'4xl'} textAlign={'center'}
             >
-              Log in to your account
+              {t('loginCard.title')}
             </Heading>
             <HStack spacing="1" justify="center">
-              <Text fontSize={'lg'} color={'gray.600'}>Don't have an account?</Text>
-              <Link color={'blue.400'} href={'/signup'}>Sign up</Link>
+              <Text fontSize={'lg'} color={'gray.600'}>{t('loginCard.subtitle')}</Text>
+              <Link color={'blue.400'} href={'/signup'}>{t('loginCard.signupLink')}</Link>
             </HStack>
           </Stack>
         </Stack>
@@ -116,17 +127,17 @@ function LoginCard({currentUserInfo, setCurrentUserInfo}) {
           <Stack spacing="6">
             <Stack spacing="5">
               <FormControl>
-                <FormLabel htmlFor="email">Email</FormLabel>
+                <FormLabel htmlFor="email">{t('loginCard.email')}</FormLabel>
                 <Input id="email" type="email" value={email} onChange={handleEmailChange} backgroundColor={"white"} />
               </FormControl>
               <PasswordField value={password} onChange={handlePasswordChange} ref={passwordRef}/>
             </Stack>
-            <HStack justify="space-between">
-              <Checkbox defaultChecked>Remember me</Checkbox>
+            {/* <HStack justify="space-between">
+              <Checkbox defaultChecked>{t('loginCard.rememberMe')}</Checkbox>
               <Button variant="link" colorScheme="blue" size="sm">
-                Forgot password?
+                {t('loginCard.forgotPassword')}
               </Button>
-            </HStack>
+            </HStack> */}
             <Stack spacing="6" justifyContent={'center'}>
               <Button 
               variant="primary"
@@ -137,16 +148,16 @@ function LoginCard({currentUserInfo, setCurrentUserInfo}) {
               _hover={{
                 bg: 'blue.500',
               }}
-              onClick={handleSubmit}>Login</Button>
+              onClick={handleSubmit}>{t('loginCard.loginButton')}</Button>
               <HStack>
                 <Divider />
                 <Text fontSize="sm" whiteSpace="nowrap" color="muted">
-                  or continue with
+                  {t('loginCard.orContinueWith')}
                 </Text>
                 <Divider />
               </HStack>
               <Box alignItems="flex-end" width={"100%"} justifyContent="center">
-                <OAuthButtonGroup />
+                <GoogleSSO />
               </Box>
             </Stack>
           </Stack>

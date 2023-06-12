@@ -3,28 +3,29 @@ import { Box, Flex, Text, IconButton, Button, Stack, Collapse, Icon, Link,
 import {HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon} from '@chakra-ui/icons';
 import Logo from '../images/logo.png';
 import { Input } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Filter from './Filter';
+import LanguageSelector from './LanguageSelector';
+import { useTranslation } from 'react-i18next';
 
-export default function NavBar({isLoggedIn, setIsLoggedIn, currentUserInfo, filterOptions, filteredValues, setFilteredValues}) {
+export default function NavBar({filterOptions, filteredValues, setFilteredValues, onHomePage}) {
   const navigate = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
-  
-  // useEffect(() => {
-  //   console.log(isLoggedIn);
-  // }, []);
+  const { t, i18n } = useTranslation();
+  // var posDefault = -99;
+  // if (i18n.language =='en') {posDefault = -145}
+  // const [notificationPos, setNotificationPos] = useState(posDefault);
 
   const handleLogOut = () => {
     localStorage.clear();
-    setIsLoggedIn(false);
-    navigate(`/`);
+    navigate('/');
   }
 
   return (
     <Box w="100%" zIndex={100} bg={useColorModeValue('gray.100', 'gray.900')} px={4} position="fixed" id="navbar">
       <Flex
-        bg={useColorModeValue('white', 'gray.800')}
+        bg={useColorModeValue('white', 'gray.800')} 
         color={useColorModeValue('gray.600', 'white')}
         minH={'60px'}
         py={{ base: 2 }}
@@ -36,7 +37,7 @@ export default function NavBar({isLoggedIn, setIsLoggedIn, currentUserInfo, filt
         <Flex
           flex={{ base: 1, md: 'auto' }}
           ml={{ base: -2 }}
-          display={{ base: 'flex', md: 'none' }}>
+          display={{ base: 'none', md: 'none' }}>
           <IconButton
             onClick={onToggle}
             icon={
@@ -46,29 +47,41 @@ export default function NavBar({isLoggedIn, setIsLoggedIn, currentUserInfo, filt
             aria-label={'Toggle Navigation'}
           />
         </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
+        <Flex flex={{ base: 1 }} justify={'start' }>
           <Box maxW='20vh' onClick={()=>{ navigate(`/`);}} >
-            <img className="logo" src={Logo} alt="Thrifty" style={{cursor:'pointer'}} />
+            <img className="logo" src={Logo} alt="Thrifty" style={{cursor:'pointer', maxHeight:'10vw'}} />
           </Box>
-          <Flex display={{ base: 'none', md: 'flex' }} ml={10} w="100%">
-            <Square w="10vw"/>
+          <Flex  ml={10} w="100%">
+            {window.screen.width >= 821 ?
+              <Square w="10vw"/>:<></>}
             <Square>
-              <Filter filterOptions={filterOptions} 
-                filteredValues={filteredValues} setFilteredValues={setFilteredValues}/>
+              {onHomePage?
+                <Filter filterOptions={filterOptions} 
+                  filteredValues={filteredValues} setFilteredValues={setFilteredValues}/>
+                :<></>
+              }
             </Square>
           </Flex>
         </Flex>
 
-        {isLoggedIn ? 
+        {(localStorage.getItem('name') !== null) ? 
         (<Stack
           flex={{ base: 1, md: 0 }}
           justify={'flex-end'}
           direction={'row'}
           spacing={6}>
-          <span style={{ whiteSpace: 'nowrap' }}>Hi, {localStorage.getItem('user')}!</span>
+          <LanguageSelector />
           <Button
             as={'a'}
-            display={{ base: 'none', md: 'inline-flex' }}
+            fontSize={'sm'}
+            fontWeight={400}
+            variant={'link'}
+            href={'/myfav'}>
+            {t('Hi')} {localStorage.getItem('name')} {t('exclamation')}
+          </Button>
+          <Button
+            as={'a'}
+            display={{ base: 'inline-flex', md: 'inline-flex' }}
             fontSize={'sm'}
             fontWeight={600}
             color={'white'}
@@ -78,7 +91,7 @@ export default function NavBar({isLoggedIn, setIsLoggedIn, currentUserInfo, filt
               bg: 'pink.300',
             }}
             onClick={handleLogOut}>
-            Log out
+            {t('logout')}
           </Button>
           </Stack>
           ) : (
@@ -87,17 +100,18 @@ export default function NavBar({isLoggedIn, setIsLoggedIn, currentUserInfo, filt
           justify={'flex-end'}
           direction={'row'}
           spacing={6}>
+          <LanguageSelector />
           <Button
             as={'a'}
             fontSize={'sm'}
             fontWeight={400}
             variant={'link'}
             href={'/login'}>
-            Log In
+            {t('login')}
           </Button>
           <Button
             as={'a'}
-            display={{ base: 'none', md: 'inline-flex' }}
+            display={{ base: 'inline-flex', md: 'inline-flex' }}
             fontSize={'sm'}
             fontWeight={600}
             color={'white'}
@@ -106,7 +120,7 @@ export default function NavBar({isLoggedIn, setIsLoggedIn, currentUserInfo, filt
             _hover={{
               bg: 'pink.300',
             }}>
-            Sign Up
+            {t('signup')}
           </Button>
         </Stack>)
         }
@@ -166,7 +180,7 @@ export default function NavBar({isLoggedIn, setIsLoggedIn, currentUserInfo, filt
     );
   };
   
-  const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
+  const DesktopSubNav = ({ label, href, subLabel }) => {
     return (
       <Link
         href={href}
@@ -213,7 +227,7 @@ export default function NavBar({isLoggedIn, setIsLoggedIn, currentUserInfo, filt
     );
   };
   
-  const MobileNavItem = ({ label, children, href }: NavItem) => {
+  const MobileNavItem = ({ label, children, href }) => {
     const { isOpen, onToggle } = useDisclosure();
   
     return (
@@ -263,14 +277,14 @@ export default function NavBar({isLoggedIn, setIsLoggedIn, currentUserInfo, filt
     );
   };
   
-  interface NavItem {
-    label: string;
-    subLabel?: string;
-    children?: Array<NavItem>;
-    href?: string;
-  }
+  // interface NavItem {
+  //   label: string;
+  //   subLabel?: string;
+  //   children?: Array<NavItem>;
+  //   href?: string;
+  // }
   
-  const NAV_ITEMS: Array<NavItem> = [
+  const NAV_ITEMS = [
     {
       label: 'Inspiration',
       children: [
